@@ -52,6 +52,10 @@ def download_csv_files():
         s3labbucket.Bucket(constants.BUCKET_WITH_FILES).download_file(name, key)
         print('Downloaded file ' + key)
 
+def download_file_from_bucket(bucket, key):
+    bucket.download_file(key, key)
+    print('Downloaded file '+ key)
+
 
 def upload_csv_files_input_bucket(s3, bucket):
     current_dir = os.getcwd()

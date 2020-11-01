@@ -4,6 +4,8 @@ import sys
 import os
 import constants
 import utils
+import csv
+import json
 from botocore.exceptions import ClientError, NoCredentialsError, BotoCoreError
 import logging
 
@@ -49,10 +51,16 @@ class DataTransform:
         # Iterate over the list of object summaries
         for objSummary in inputBucket.objects.all():
             # get the obj key from obj summary
-            key = objSummary.key
+            csvKey = objSummary.key
 
             # retrieve the obj with the specified key from input bucket
-            obj = self.s3.Object(self.INPUT_BUCKET_NAME, key)
+            utils.download_file_from_bucket(inputBucket, csvKey)
+
+            # transform downloaded csv files to json files
+            self.transform(csvKey)
+
+
+
 
 
     
@@ -78,7 +86,26 @@ class DataTransform:
 
         return url
 
-    
+    def transform(self, file):
+        f = open(file, 'r')
+        print('Open file {0} to read'.format(file))
+
+        fieldNames = f.readlines(1)[0].split(',')
+        reader = csv.DictReader(f, fieldNames)
+        # Convert to json
+        out = json.dumps([row for row in reader])
+        f.close()
+
+        # Store JSON in a file
+        jsonName = file.split('.')[0]+'.json'
+        jsonFile = open(jsonName, 'w')
+        jsonFile.write(out)
+        print('Created Json file {0} from CSV file {1}'.format(jsonFile, file))
+
+        
+
+
+
 
 
 
