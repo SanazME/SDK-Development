@@ -78,6 +78,11 @@ def find_same_type_files(dir, type):
             files.append(file)
     return files
 
+def delete_local_files(type):
+    files = find_same_type_files(os.getcwd(), type)
+    for f in files:
+        os.remove(f)
+        print('{0} is removed!'.format(f))
 
 def deleteBuckets(bucketList):
     s3 = boto3.resource('s3')
