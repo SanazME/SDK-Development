@@ -63,6 +63,15 @@ class DataTransform:
             outputBucket.upload_file(jsonName, jsonName)
             print('Uploaded file {0} to {1} outputBucket'.format(jsonName, outputBucket))
 
+            # generate presigned url for transformed files
+            # client = boto3.client('s3')
+            url = self.s3.meta.client.generate_presigned_url('get_object', 
+                Params={'Bucket': self.OUTPUT_BUCKET_NAME, 'Key': jsonName},
+                ExpiresIn=900,
+                HttpMethod='GET')
+            print('presigned url is generated for {0}: {1}'.format(jsonName, url))
+
+            
 
 
 
