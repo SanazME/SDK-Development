@@ -59,8 +59,13 @@ class DataTransform:
             # transform downloaded csv files to json files
             [jsonKey, jsonName] = self.transform(csvKey)
 
-            # upload transformed JSON file to output bucket
-            outputBucket.upload_file(jsonName, jsonName)
+            # upload transformed JSON file to output bucket with server-side encryption and user's custom metadata
+            # outputBucket.upload_file(jsonName, jsonName)
+            ExtraArgs = {
+                'ServerSideEncryption': 'AES256',
+                'Metadata': {'contact': 'Mimi'}
+            }
+            outputBucket.upload_file(jsonName, jsonName, ExtraArgs=ExtraArgs)
             print('Uploaded file {0} to {1} outputBucket'.format(jsonName, outputBucket))
 
             # generate presigned url for transformed files
