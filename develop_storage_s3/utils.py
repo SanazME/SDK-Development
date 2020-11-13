@@ -62,7 +62,6 @@ def upload_csv_files_input_bucket(s3, bucket):
     txt_files = find_same_type_files(current_dir, '.txt')
 
     for file in txt_files:
-
         try:
             s3.Bucket(bucket).upload_file(file, file)
         except NoCredentialsError as e:

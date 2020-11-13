@@ -57,7 +57,12 @@ class DataTransform:
             utils.download_file_from_bucket(inputBucket, csvKey)
 
             # transform downloaded csv files to json files
-            self.transform(csvKey)
+            [jsonKey, jsonName] = self.transform(csvKey)
+
+            # upload transformed JSON file to output bucket
+            outputBucket.upload_file(jsonName, jsonName)
+            print('Uploaded file {0} to {1} outputBucket'.format(jsonName, outputBucket))
+
 
 
 
@@ -97,10 +102,13 @@ class DataTransform:
         f.close()
 
         # Store JSON in a file
+        jsonKey = file.split('.')[0]
         jsonName = file.split('.')[0]+'.json'
         jsonFile = open(jsonName, 'w')
         jsonFile.write(out)
         print('Created Json file {0} from CSV file {1}'.format(jsonFile, file))
+
+        return [jsonKey, jsonName]
 
         
 
