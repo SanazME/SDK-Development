@@ -77,29 +77,6 @@ class DataTransform:
 
 
 
-    
-
-
-
-    def generate_presigned_url(self, bucket, key):
-        """ Generate a presigned URL to share an S3 object
-        bucket - S3 bucket where the file exists
-        key - Key (path and filename) of the file
-        """
-
-        s3Client = self.s3.meta.client
-        try:
-            url = s3Client.generate_presigned_url('get_object', Params = {
-                'Bucket': bucket,
-                'Key': key
-            },
-            ExpiresIn=900)
-        except ClientError as e:
-            logging.error(e)
-            return None
-
-        return url
-
     def transform(self, file):
         f = open(file, 'r')
         print('Open file {0} to read'.format(file))
